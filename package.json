@@ -1,7 +1,7 @@
 {
   "name": "global-test-harness",
   "description": "Starts a `jsdom` instance and load global namespace code similar to module code for testing.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/es5/index.js",
   "module": "dist/es2015/index.js",
   "typings": "dist/es5/index.d.ts",
