@@ -23,6 +23,9 @@ await harness.import('...your file')
 const yourComponent = harness.get('namespace path to your component')
 ```
 
+Note that this library does not resolve your global namespace reference magically.
+You need to load your files in the right order to run the test.
+
 ## Usage
 
 See [`src/index.spec.ts`](src/index.spec.ts)
