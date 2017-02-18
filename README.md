@@ -10,6 +10,10 @@
 
 Starts a `jsdom` instance and load global namespace code similar to module code for testing.
 
+## Usage
+
+See [`src/index.spec.ts`](src/index.spec.ts)
+
 This library assume you put all your global namespace code under a single root.
 e.g. `MyCompany.xxx.xxx.xxx`.
 
@@ -25,10 +29,6 @@ const yourComponent = harness.get('namespace path to your component')
 
 Note that this library does not resolve your global namespace reference magically.
 You need to load your files in the right order to run the test.
-
-## Usage
-
-See [`src/index.spec.ts`](src/index.spec.ts)
 
 ## Contribute
 
