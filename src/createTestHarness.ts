@@ -71,7 +71,8 @@ function setupJsDom(jsdomConfig) {
     const virtualConsole = createVirtualConsole().sendTo(console)
     const config = extend(
       {
-        file: 'index.html',
+        html: '<br>',
+        url: `file://${process.cwd()}/`,
         virtualConsole,
         scripts: []
       },
