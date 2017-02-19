@@ -33,7 +33,7 @@ test('import file by relative path', async t => {
 test('import modules', async t => {
   const harness = await createTestHarness('My', './fixtures/my')
 
-  // `aurelia-logging-color` depends on `global-store`
+  // `aurelia-logging-color` depends on `color-map`
   // The harness will load that automatically
   const Color = await harness.import('aurelia-logging-color')
   t.not(Color.ColorAppender, undefined)
@@ -56,7 +56,7 @@ test('can configure jsdom', async t => {
       // Need to use `require.resolve` to find the abs path.
       // Need to point to the bundled version as this is loaded in script tag.
       // Need to manually load all dependencies as in script tag.
-      // require.resolve('global-store/dist/global-store.es5.js'),
+      require.resolve('color-map/dist/color-map.es5.js'),
       require.resolve('aurelia-logging-color/dist/aurelia-logging-color.es5.js')
     ],
     // This will be invoked.
@@ -65,7 +65,7 @@ test('can configure jsdom', async t => {
     }
   })
   const window: any = await harness.window
-  // t.not(window.GlobalStore, undefined)
+  t.not(window.ColorMap, undefined)
   t.not(window.AureliaLoggingColor, undefined)
   t.is(order.next, 1)
 })
