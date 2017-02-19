@@ -1,7 +1,18 @@
 import test from 'ava'
+import fixture from 'ava-fixture'
 import Order from 'assert-order'
 
 import { createTestHarness } from './index'
+
+const ftest = fixture(test, 'fixtures/my/product')
+
+ftest.each(async (t, d) => {
+  // see './fixtures/my/product' folder for syntax supported.
+  const harness = await createTestHarness('My', './fixtures/my')
+  const filename = d.caseName.slice(0, d.caseName.length - 3)
+  let grid = await harness.import('./fixtures/my/product/' + filename)
+  t.deepEqual(grid, { a: 1 })
+})
 
 test('import file by namespace path', async t => {
   const harness = await createTestHarness('My', './fixtures/my')
