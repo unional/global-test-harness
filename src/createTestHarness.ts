@@ -2,7 +2,22 @@ import { env, createVirtualConsole, Config } from 'jsdom'
 import * as SystemJS from 'systemjs'
 import * as extend from 'deep-extend'
 
-export function createTestHarness(namespaceRoot: string, mappedPath: string, jsdomConfig: Config = {}) {
+export interface TestHarness {
+  window: Window
+  /**
+   * Import module or file.
+   * @param identifier Module name or case-insensitive namespace path (`pan/base/grid`)
+   * or relative path (`./js/pan/base/grid`)
+   */
+  import(identifier: string): Promise<any>
+  /**
+   * Get the specified target from global namespace.
+   * @param path Path to the target, e.g. 'Pan.base.grid'
+   */
+  get(path: string): any
+}
+
+export function createTestHarness(namespaceRoot: string, mappedPath: string, jsdomConfig: Config = {}): Promise<TestHarness> {
   const loweredNamespaceRoot = namespaceRoot.toLowerCase()
   let window: Window
   let systemjs: typeof SystemJS
