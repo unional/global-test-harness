@@ -22,11 +22,21 @@ export function createTestHarness(namespaceRoot: string, mappedPath: string, jsd
   const loweredNamespaceRoot = namespaceRoot.toLowerCase()
   let window: Window
   let systemjs: typeof SystemJS
+
+  // Add `console.debug` to NodeJS environment.
+  // so that debug message can be written
+  console.debug = console.debug || console.log
   return setupJsDom(jsdomConfig).then((win) => {
     window = win
     systemjs = win.SystemJS
     setupSystemJS(systemjs, namespaceRoot, loweredNamespaceRoot, mappedPath)
-
+    // const scripts = jsdomConfig.scripts
+    // if (scripts && scripts.length > 0) {
+    //   scripts.forEach(script => {
+    //     const m = require(script)
+    //     systemjs.set(script, )
+    //   })
+    // }
     return {
       window,
 

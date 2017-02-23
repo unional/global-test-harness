@@ -85,3 +85,13 @@ test('get(path)', async t => {
   t.deepEqual(harness.get('My.product.Component'), grid)
   t.deepEqual(harness.get('my/product/Component'), grid)
 })
+
+test('color logs', async _t => {
+  const harness = await createTestHarness('My', './fixtures/my')
+  const Logging = await harness.import('aurelia-logging')
+  const Color = await harness.import('aurelia-logging-color')
+  Logging.addAppender(new Color.ColorAppender())
+  Logging.setLevel(Logging.logLevel.debug)
+  const log = Logging.getLogger('color log')
+  log.debug('do some color')
+})
