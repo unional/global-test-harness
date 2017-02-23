@@ -88,7 +88,7 @@ function setupJsDom(jsdomConfig) {
     const config = extend(
       {
         html: '<br>',
-        url: fileUrl(process.cwd()),
+        url: fileUrl(process.cwd()) + '/',
         virtualConsole,
         scripts: []
       },
