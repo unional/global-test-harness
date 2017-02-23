@@ -4,7 +4,10 @@ import * as extend from 'deep-extend'
 import * as fileUrl from 'file-url'
 
 export interface TestHarness {
-  window: Window
+  /**
+   * Window and any global namespaces.
+   */
+  window: Window & { [index: string]: any }
   /**
    * Import module or file.
    * @param identifier Module name or case-insensitive namespace path (`pan/base/grid`)
