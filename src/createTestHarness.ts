@@ -1,6 +1,7 @@
 import { env, createVirtualConsole, Config } from 'jsdom'
 import * as SystemJS from 'systemjs'
 import * as extend from 'deep-extend'
+import * as fileUrl from 'file-url'
 
 export interface TestHarness {
   window: Window
@@ -87,7 +88,7 @@ function setupJsDom(jsdomConfig) {
     const config = extend(
       {
         html: '<br>',
-        url: `file://${process.cwd()}/`,
+        url: fileUrl(process.cwd()),
         virtualConsole,
         scripts: []
       },

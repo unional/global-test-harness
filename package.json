@@ -91,6 +91,7 @@
   },
   "dependencies": {
     "deep-extend": "^0.4.1",
+    "file-url": "^2.0.2",
     "jsdom": "^9.11.0",
     "systemjs": "^0.20.9"
   }
