@@ -12,17 +12,14 @@ Starts a `jsdom` instance and load global namespace code similar to module code 
 
 See [`src/index.spec.ts`](src/index.spec.ts)
 
-This library assume you put all your global namespace code under a single root.
-e.g. `MyCompany.xxx.xxx.xxx`.
-
 Also, the file structure should match the namespace stucture, and each file should declares only one component.
 e.g. `mycompany/product/SomeComponent.js` declares `MyCompany.product.SomeComponent`.
 
 If your code deviate from it, you can still use this library but you need to do this to get your component:
 
 ```ts
-await harness.import('...your file')
-const yourComponent = harness.get('namespace path to your component')
+await harness.import('./relative/path/to/your/file')
+const yourComponent = harness.get('YourCompany.yourProduct.yourComponent')
 ```
 
 Note that this library does not resolve your global namespace reference magically.

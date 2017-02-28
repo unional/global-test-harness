@@ -2,27 +2,12 @@ import { env, createVirtualConsole, Config } from 'jsdom'
 import * as SystemJS from 'systemjs'
 import * as extend from 'deep-extend'
 import * as fileUrl from 'file-url'
+import { join } from 'path'
 
-export interface TestHarness {
-  /**
-   * Window and any global namespaces.
-   */
-  window: Window & { [index: string]: any }
-  /**
-   * Import module or file.
-   * @param identifier Module name or case-insensitive namespace path (`pan/base/grid`)
-   * or relative path (`./js/pan/base/grid`)
-   */
-  import(identifier: string): Promise<any>
-  /**
-   * Get the specified target from global namespace.
-   * @param path Path to the target, e.g. 'Pan.base.grid'
-   */
-  get(path: string): any
-}
+import { TestHarnessConfig, TestHarness, Namespaces } from './interfaces'
+import { TestHarnessImpl } from './TestHarnessImpl'
 
-export function createTestHarness(namespaceRoot: string, mappedPath: string, jsdomConfig: Config = {}): Promise<TestHarness> {
-  const loweredNamespaceRoot = namespaceRoot.toLowerCase()
+export function createTestHarness(config: TestHarnessConfig, jsdomConfig: Config = {}): Promise<TestHarness> {
   let window: Window
   let systemjs: typeof SystemJS
 
@@ -32,69 +17,46 @@ export function createTestHarness(namespaceRoot: string, mappedPath: string, jsd
   return setupJsDom(jsdomConfig).then((win) => {
     window = win
     systemjs = win.SystemJS
-    setupSystemJS(systemjs, namespaceRoot, loweredNamespaceRoot, mappedPath)
-    // const scripts = jsdomConfig.scripts
-    // if (scripts && scripts.length > 0) {
-    //   scripts.forEach(script => {
-    //     const m = require(script)
-    //     systemjs.set(script, )
-    //   })
-    // }
-    return {
-      window,
+    setupSystemJS(systemjs, config)
 
-      /**
-       * Import module or file.
-       * @param identifier Module name or case-insensitive namespace path (`pan/base/grid`)
-       * or relative path (`./js/pan/base/grid`)
-       */
-      async import(identifier: string) {
-        const result = await systemjs.import(identifier)
-        if (identifier.toLowerCase().indexOf(loweredNamespaceRoot) === 0) {
-          const path = namespaceRoot + identifier.slice(namespaceRoot.length)
-          return getNamespace(window, path)
-        }
-        else if (identifier.indexOf(mappedPath) === 0) {
-          const path = namespaceRoot + identifier.slice(mappedPath.length)
-          return getNamespace(window, path)
-        }
-
-        return result
-      },
-      /**
-       * Get the specified target from global namespace.
-       * @param path Path to the target, e.g. 'Pan.base.grid'
-       */
-      get(path: string) {
-        if (path.toLowerCase().indexOf(loweredNamespaceRoot) === 0) {
-          path = namespaceRoot + path.slice(namespaceRoot.length)
-        }
-        return getNamespace(window, path)
-      }
-    }
+    return new TestHarnessImpl(window, config)
   })
 }
-function setupSystemJS(systemjs, namespaceRoot, loweredNamespaceRoot, mappedPath) {
+
+function setupSystemJS(systemjs, config: TestHarnessConfig) {
   systemjs.config({
     baseURL: 'node_modules',
-    paths: {
-      [namespaceRoot]: mappedPath,
-      [loweredNamespaceRoot]: mappedPath
-    },
-    packages: {
-      [namespaceRoot]: {
-        defaultExtension: 'js'
-      },
-      [loweredNamespaceRoot]: {
-        defaultExtension: 'js'
-      }
-    },
+    map: getPathConfig(config.root, config.namespaces),
+    packages: getPackageConfig(config.namespaces),
     packageConfigPaths: [
       '*/package.json',
       '@*/*/package.json'
     ]
   })
 }
+
+function getPathConfig(root, namespaces) {
+  const keys = Object.keys(namespaces)
+  return keys.reduce((v, key) => {
+    v[key] = './' + join(root, namespaces[key].path)
+    return v
+  }, {})
+}
+
+function getPackageConfig(namespaces: Namespaces) {
+  const keys = Object.keys(namespaces)
+  return keys.reduce((v, key) => {
+    v[key] = {
+      defaultExtension: 'js'
+    }
+    const ns = namespaces[key];
+    if (ns.main) {
+      v[key].main = ns.main
+    }
+    return v
+  }, {})
+}
+
 function setupJsDom(jsdomConfig) {
   return new Promise<any>((resolve, reject) => {
     const virtualConsole = createVirtualConsole().sendTo(console)
@@ -131,17 +93,4 @@ function setupJsDom(jsdomConfig) {
 
     env(config)
   })
-}
-
-function getNamespace(root, path) {
-  const nodes = path.split(/[.\/]/);
-  let m = root[nodes[0]];
-  for (let j = 1, len = nodes.length; j < len; j++) {
-    if (!m) {
-      break;
-    }
-    const node = nodes[j];
-    m = m[node];
-  }
-  return m;
 }
