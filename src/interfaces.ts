@@ -1,12 +1,12 @@
-export interface TestHarness {
-  /**
-   * Window and any global namespaces.
-   */
-  window: Window & { [index: string]: any }
+import { Domture } from 'domture'
+
+export interface TestHarness extends Domture {
   /**
    * Import module or file.
-   * @param identifier Module name or case-insensitive namespace path (`pan/base/grid`)
-   * or relative path (`./js/pan/base/grid`)
+   * @param identifier
+   * Module name: `color-map`,
+   * Namespace path: `MyCompany.myproduct.component`
+   * Relative path (from root): `./src/index.js`
    */
   import(identifier: string): Promise<any>
   /**
@@ -26,6 +26,7 @@ export interface Namespaces {
   }
 }
 export interface TestHarnessConfig {
-  root: string,
-  namespaces: Namespaces
+  srcRoot: string,
+  namespaces: Namespaces,
+  scripts?: string[]
 }

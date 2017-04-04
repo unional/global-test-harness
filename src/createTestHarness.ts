@@ -1,38 +1,19 @@
-import { env, createVirtualConsole, Config } from 'jsdom'
-import * as SystemJS from 'systemjs'
-import * as extend from 'deep-extend'
-import * as fileUrl from 'file-url'
+import { create } from 'domture'
 import { join } from 'path'
 
 import { TestHarnessConfig, TestHarness, Namespaces } from './interfaces'
 import { TestHarnessImpl } from './TestHarnessImpl'
 
-export function createTestHarness(config: TestHarnessConfig, jsdomConfig: Config = {}): Promise<TestHarness> {
-  let window: Window
-  let systemjs: typeof SystemJS
-
-  // Add `console.debug` to NodeJS environment.
-  // so that debug message can be written
-  console.debug = console.debug || console.log
-  return setupJsDom(jsdomConfig).then((win) => {
-    window = win
-    systemjs = win.SystemJS
-    setupSystemJS(systemjs, config)
-
-    return new TestHarnessImpl(window, config)
-  })
-}
-
-function setupSystemJS(systemjs, config: TestHarnessConfig) {
-  systemjs.config({
-    baseURL: 'node_modules',
-    map: getPathConfig(config.root, config.namespaces),
+export async function createTestHarness(config: TestHarnessConfig): Promise<TestHarness> {
+  const domture = await create({
+    packageManager: 'npm',
+    map: getPathConfig(config.srcRoot, config.namespaces),
     packages: getPackageConfig(config.namespaces),
-    packageConfigPaths: [
-      '*/package.json',
-      '@*/*/package.json'
-    ]
+    srcRoot: config.srcRoot,
+    scripts: config.scripts
   })
+
+  return new TestHarnessImpl(domture, config)
 }
 
 function getPathConfig(root, namespaces) {
@@ -55,42 +36,4 @@ function getPackageConfig(namespaces: Namespaces) {
     }
     return v
   }, {})
-}
-
-function setupJsDom(jsdomConfig) {
-  return new Promise<any>((resolve, reject) => {
-    const virtualConsole = createVirtualConsole().sendTo(console)
-    const config = extend(
-      {
-        html: '<br>',
-        url: fileUrl(process.cwd()) + '/',
-        virtualConsole,
-        scripts: []
-      },
-      jsdomConfig,
-      {
-        done(err, win) {
-          if (jsdomConfig.done) {
-            try {
-              jsdomConfig.done(err, win)
-            }
-            catch (e) {
-              reject(e)
-            }
-          }
-
-          if (err) {
-            reject(err)
-          }
-          else {
-            resolve(win)
-          }
-        }
-      })
-
-    // `deep-extend` can't merge array, so need to push it here instead of declaring above.
-    config.scripts.push(require.resolve('systemjs'))
-
-    env(config)
-  })
 }
