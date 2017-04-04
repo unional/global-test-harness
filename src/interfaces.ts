@@ -1,4 +1,4 @@
-import { Domture } from 'domture'
+import { Domture, JsdomConfig, SystemjsConfig } from 'domture'
 
 export interface TestHarness extends Domture {
   /**
@@ -26,7 +26,8 @@ export interface Namespaces {
   }
 }
 export interface TestHarnessConfig {
-  srcRoot: string,
-  namespaces: Namespaces,
-  scripts?: string[]
+  namespaces: Namespaces
+  srcRoot: string
+  systemjsConfig?: SystemjsConfig
+  jsdomConfig?: JsdomConfig
 }

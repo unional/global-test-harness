@@ -89,13 +89,15 @@ test('can preload scripts', async t => {
           path: '.'
         }
       },
-      scripts: [
-        // Need to use `require.resolve` to find the abs path.
-        // Need to point to the bundled version as this is loaded in script tag.
-        // Need to manually load all dependencies as in script tag.
-        require.resolve('color-map/dist/color-map.es5.js'),
-        require.resolve('aurelia-logging-color/dist/aurelia-logging-color.es5.js')
-      ]
+      jsdomConfig: {
+        scripts: [
+          // Need to use `require.resolve` to find the abs path.
+          // Need to point to the bundled version as this is loaded in script tag.
+          // Need to manually load all dependencies as in script tag.
+          require.resolve('color-map/dist/color-map.es5.js'),
+          require.resolve('aurelia-logging-color/dist/aurelia-logging-color.es5.js')
+        ]
+      }
     })
   const window: any = await harness.window
   t.not(window.ColorMap, undefined)
@@ -125,9 +127,11 @@ test('access global namespace', async t => {
           path: '.'
         }
       },
-      scripts: [
-        './node_modules/aurelia-logging-color/dist/aurelia-logging-color.es5.js'
-      ]
+      jsdomConfig: {
+        scripts: [
+          './node_modules/aurelia-logging-color/dist/aurelia-logging-color.es5.js'
+        ]
+      }
     })
 
   const Logging = harness.window.AureliaLoggingColor

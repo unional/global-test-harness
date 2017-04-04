@@ -5,7 +5,7 @@ import { join } from 'path'
 import { TestHarnessConfig, TestHarness } from './interfaces'
 
 export class TestHarnessImpl implements TestHarness {
-  public window
+  public window: Window
   private systemjs: typeof SystemJS
   private relativeNamespaceLookup: Array<{ ns: string, path: string }> = []
   constructor(domture: Domture, private config: TestHarnessConfig) {
@@ -91,7 +91,7 @@ export class TestHarnessImpl implements TestHarness {
 
 }
 
-function getNamespace(root, path) {
+function getNamespace(root: any, path: string) {
   const nodes = path.split(/[.\/]/);
   let m = root[nodes[0]];
   for (let j = 1, len = nodes.length; j < len; j++) {

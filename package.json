@@ -91,6 +91,7 @@
     "webpack": "^2.2.0"
   },
   "dependencies": {
-    "domture": "^0.5.0"
+    "deep-extend": "^0.4.1",
+    "domture": "^0.7.0"
   }
 }
