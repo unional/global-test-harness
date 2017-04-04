@@ -21,7 +21,7 @@
     "preversion": "git pull && npm run verify",
     "version": "npm run remove-spec",
     "verify": "npm run lint && npm run coverage && npm run dependency-check",
-    "coverage": "nyc --check-coverage --branches 85 --functions 85 --lines 85 npm test",
+    "coverage": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "remove-spec": "rimraf dist/es5/**/*.spec.*",
     "test": "npm run clean && tsc && ava",
@@ -91,9 +91,6 @@
     "webpack": "^2.2.0"
   },
   "dependencies": {
-    "deep-extend": "^0.4.1",
-    "file-url": "^2.0.2",
-    "jsdom": "^9.11.0",
-    "systemjs": "^0.20.9"
+    "domture": "^0.5.0"
   }
 }

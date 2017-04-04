@@ -1,14 +1,18 @@
+import { Domture } from 'domture'
+
 import { join } from 'path'
 
-import { TestHarnessConfig } from './interfaces'
+import { TestHarnessConfig, TestHarness } from './interfaces'
 
-export class TestHarnessImpl {
+export class TestHarnessImpl implements TestHarness {
+  public window
   private systemjs: typeof SystemJS
   private relativeNamespaceLookup: Array<{ ns: string, path: string }> = []
-  constructor(public window: Window, private config: TestHarnessConfig) {
-    this.systemjs = (window as any).SystemJS
+  constructor(domture: Domture, private config: TestHarnessConfig) {
+    this.systemjs = domture.window.SystemJS
+    this.window = domture.window
     for (let ns in config.namespaces) {
-      const path = './' + join(config.root, config.namespaces[ns].path)
+      const path = './' + join(config.srcRoot, config.namespaces[ns].path)
       this.relativeNamespaceLookup.push({
         ns,
         path: path
@@ -53,7 +57,7 @@ export class TestHarnessImpl {
   }
 
   private isRelative(identifier: string) {
-    return identifier.indexOf(this.config.root) === 0
+    return identifier.indexOf(this.config.srcRoot) === 0
   }
 
   private async resolveRelative(identifier: string) {

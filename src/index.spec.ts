@@ -1,6 +1,5 @@
 import test from 'ava'
 import fixture from 'ava-fixture'
-import Order from 'assert-order'
 
 import { createTestHarness } from './index'
 
@@ -9,7 +8,7 @@ const ftest = fixture(test, 'fixtures/my/product')
 ftest.each(async (t, d) => {
   // see './fixtures/my/product' folder for syntax supported.
   const harness = await createTestHarness({
-    root: './fixtures/my',
+    srcRoot: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
@@ -23,7 +22,7 @@ ftest.each(async (t, d) => {
 
 test('import file by namespace path', async t => {
   const harness = await createTestHarness({
-    root: './fixtures/my',
+    srcRoot: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
@@ -37,7 +36,7 @@ test('import file by namespace path', async t => {
 
 test('import file by relative path', async t => {
   const harness = await createTestHarness({
-    root: './fixtures/my',
+    srcRoot: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
@@ -50,7 +49,7 @@ test('import file by relative path', async t => {
 
 test('import modules', async t => {
   const harness = await createTestHarness({
-    root: './fixtures/my',
+    srcRoot: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
@@ -70,7 +69,7 @@ test('import modules', async t => {
 
 test('getWindow()', async t => {
   const harness = await createTestHarness({
-    root: './fixtures/my',
+    srcRoot: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
@@ -81,55 +80,31 @@ test('getWindow()', async t => {
   t.not(window.document, undefined)
 })
 
-test('can configure jsdom', async t => {
-  const order = new Order(1)
+test('can preload scripts', async t => {
   const harness = await createTestHarness(
     {
-      root: './fixtures/my',
+      srcRoot: './fixtures/my',
       namespaces: {
         'My': {
           path: '.'
         }
-      }
-    },
-    {
+      },
       scripts: [
         // Need to use `require.resolve` to find the abs path.
         // Need to point to the bundled version as this is loaded in script tag.
         // Need to manually load all dependencies as in script tag.
         require.resolve('color-map/dist/color-map.es5.js'),
         require.resolve('aurelia-logging-color/dist/aurelia-logging-color.es5.js')
-      ],
-      // This will be invoked.
-      done() {
-        order.step(0)
-      }
+      ]
     })
   const window: any = await harness.window
   t.not(window.ColorMap, undefined)
   t.not(window.AureliaLoggingColor, undefined)
-  t.is(order.next, 1)
-})
-
-test('Throw on invoke', async t => {
-  t.throws(createTestHarness(
-    {
-      root: './fixtures/my',
-      namespaces: {
-        'My': {
-          path: '.'
-        }
-      }
-    }, {
-      done() {
-        throw new Error("I don't like you.")
-      }
-    }))
 })
 
 test('get(path)', async t => {
   const harness = await createTestHarness({
-    root: './fixtures/my',
+    srcRoot: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
@@ -144,14 +119,12 @@ test('get(path)', async t => {
 test('access global namespace', async t => {
   const harness = await createTestHarness(
     {
-      root: './fixtures/my',
+      srcRoot: './fixtures/my',
       namespaces: {
         'My': {
           path: '.'
         }
-      }
-    },
-    {
+      },
       scripts: [
         './node_modules/aurelia-logging-color/dist/aurelia-logging-color.es5.js'
       ]
@@ -163,7 +136,7 @@ test('access global namespace', async t => {
 
 test('color logs', async _t => {
   const harness = await createTestHarness({
-    root: './fixtures/my',
+    srcRoot: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
@@ -181,7 +154,7 @@ test('color logs', async _t => {
 
 test('code is inside "src"', async t => {
   const harness = await createTestHarness({
-    root: './fixtures/fool',
+    srcRoot: './fixtures/fool',
     namespaces: {
       'Fool': {
         main: '../fool.js',
