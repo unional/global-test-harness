@@ -1,5 +1,7 @@
 # global-test-harness
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/unional/global-test-harness.svg)](https://greenkeeper.io/)
+
 [![stable][stable-image]][stable-url]
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][downloads-image]][downloads-url]
