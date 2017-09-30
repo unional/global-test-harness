@@ -138,7 +138,7 @@ test('access global namespace', async t => {
   t.truthy(Logging)
 })
 
-test('color logs', async _t => {
+test('color logs', async t => {
   const harness = await createTestHarness({
     srcRoot: './fixtures/my',
     namespaces: {
@@ -154,6 +154,7 @@ test('color logs', async _t => {
   Logging.setLevel(Logging.logLevel.debug)
   const log = Logging.getLogger('color log')
   log.debug('do some color')
+  t.pass('check console output')
 })
 
 test('code is inside "src"', async t => {
