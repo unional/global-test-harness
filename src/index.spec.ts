@@ -76,7 +76,7 @@ test('getWindow()', async t => {
       }
     }
   })
-  const window = await harness.window
+  const window = harness.window
   t.not(window.document, undefined)
 })
 
@@ -99,7 +99,7 @@ test('can preload scripts', async t => {
         ]
       }
     })
-  const window: any = await harness.window
+  const window: any = harness.window
   t.not(window.ColorMap, undefined)
   t.not(window.AureliaLoggingColor, undefined)
 })
