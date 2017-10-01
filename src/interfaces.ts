@@ -1,4 +1,4 @@
-import { Domture, JsdomConfig, SystemjsConfig } from 'domture'
+import { Domture, DomtureConfig } from 'domture'
 
 export interface TestHarness extends Domture {
   /**
@@ -25,9 +25,7 @@ export interface Namespaces {
     path: string
   }
 }
-export interface TestHarnessConfig {
+
+export interface TestHarnessConfig extends Pick<DomtureConfig, 'srcRoot'>, Partial<Pick<DomtureConfig, 'packageManager' | 'preloadScripts' | 'systemjsConfig' | 'transpiler'>> {
   namespaces: Namespaces
-  srcRoot: string
-  systemjsConfig?: SystemjsConfig
-  jsdomConfig?: JsdomConfig
 }

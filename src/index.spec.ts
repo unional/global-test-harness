@@ -8,10 +8,10 @@ const ftest = fixture(test, 'fixtures/my/product')
 ftest.each(async (t, d) => {
   // see './fixtures/my/product' folder for syntax supported.
   const harness = await createTestHarness({
-    srcRoot: './fixtures/my',
+    srcRoot: '.',
     namespaces: {
       'My': {
-        path: '.'
+        path: './fixtures/my'
       }
     }
   })
@@ -67,12 +67,12 @@ test('import modules', async t => {
   t.is(lowercase('Mister'), 'mister')
 })
 
-test('getWindow()', async t => {
+test.only('getWindow()', async t => {
   const harness = await createTestHarness({
-    srcRoot: './fixtures/my',
+    srcRoot: '.',
     namespaces: {
       'My': {
-        path: '.'
+        path: './fixtures/my'
       }
     }
   })
@@ -89,15 +89,13 @@ test('can preload scripts', async t => {
           path: '.'
         }
       },
-      jsdomConfig: {
-        scripts: [
-          // Need to use `require.resolve` to find the abs path.
-          // Need to point to the bundled version as this is loaded in script tag.
-          // Need to manually load all dependencies as in script tag.
-          require.resolve('color-map/dist/color-map.es5.js'),
-          require.resolve('aurelia-logging-color/dist/aurelia-logging-color.es5.js')
-        ]
-      }
+      preloadScripts: [
+        // Need to use `require.resolve` to find the abs path.
+        // Need to point to the bundled version as this is loaded in script tag.
+        // Need to manually load all dependencies as in script tag.
+        require.resolve('color-map/dist/color-map.es5.js'),
+        require.resolve('aurelia-logging-color/dist/aurelia-logging-color.es5.js')
+      ]
     })
   const window: any = harness.window
   t.not(window.ColorMap, undefined)
@@ -127,11 +125,9 @@ test('access global namespace', async t => {
           path: '.'
         }
       },
-      jsdomConfig: {
-        scripts: [
-          './node_modules/aurelia-logging-color/dist/aurelia-logging-color.es5.js'
-        ]
-      }
+      preloadScripts: [
+        './node_modules/aurelia-logging-color/dist/aurelia-logging-color.es5.js'
+      ]
     })
 
   const Logging = harness.window.AureliaLoggingColor

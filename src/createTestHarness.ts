@@ -1,5 +1,5 @@
 import extend = require('deep-extend')
-import { create } from 'domture'
+import { createDomture } from 'domture'
 import { join } from 'path'
 
 import { TestHarnessConfig, TestHarness, Namespaces } from './interfaces'
@@ -8,7 +8,7 @@ import { TestHarnessImpl } from './TestHarnessImpl'
 export async function createTestHarness(config: TestHarnessConfig): Promise<TestHarness> {
   const map = getPathConfig(config.srcRoot, config.namespaces)
   const packages = getPackageConfig(config.namespaces)
-  const domture = await create(extend({
+  const domture = await createDomture(extend({
     packageManager: 'npm',
     systemjsConfig: {
       map,
@@ -16,7 +16,7 @@ export async function createTestHarness(config: TestHarnessConfig): Promise<Test
     }
   }, config))
 
-  return new TestHarnessImpl(domture, config)
+  return (new TestHarnessImpl(domture, config) as any) as TestHarness
 }
 
 function getPathConfig(root: string, namespaces: Namespaces) {
