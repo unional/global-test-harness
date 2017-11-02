@@ -1,12 +1,14 @@
 import extend = require('deep-extend')
 import { createDomture } from 'domture'
 import { join } from 'path'
+import { unpartial } from 'unpartial'
 
 import { TestHarnessConfig, TestHarness, Namespaces } from './interfaces'
 import { TestHarnessImpl } from './TestHarnessImpl'
 
-export async function createTestHarness(config: TestHarnessConfig): Promise<TestHarness> {
-  const map = getPathConfig(config.srcRoot, config.namespaces)
+export async function createTestHarness(givenConfig: Partial<TestHarnessConfig> = {}): Promise<TestHarness> {
+  const config = unpartial({ rootDir: '.', namespaces: {} }, givenConfig)
+  const map = getPathConfig(config.rootDir, config.namespaces)
   const packages = getPackageConfig(config.namespaces)
   const domture = await createDomture(extend({
     packageManager: 'npm',

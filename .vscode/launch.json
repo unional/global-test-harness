@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "ava test",
+        "program": "${workspaceRoot}/node_modules/ava/profile.js",
+        "args": [
+          "${workspaceRoot}/dist/es5/index.spec.js"
+        ]
+      }
+    ]
+  }

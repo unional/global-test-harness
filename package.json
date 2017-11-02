@@ -15,7 +15,7 @@
     "clean": "rimraf dist/es5 dist/es2015",
     "dc": "npm run dependency-check",
     "dependency-check": "dependency-check . --unused --no-dev -i systemjs && dependency-check . --missing --no-dev",
-    "lint": "tslint -p tsconfig.json --type-check \"src/**/*.ts\"",
+    "lint": "tslint -p tsconfig.json \"src/**/*.ts\"",
     "prepare": "cd fixtures/fool && npm i",
     "postpublish": "git push",
     "preversion": "git pull && npm run verify",
@@ -50,7 +50,6 @@
       "*.json"
     ],
     "require": [
-      "./scripts/setup-browser-env.js",
       "./scripts/setup-test-env.js"
     ]
   },
@@ -63,27 +62,28 @@
   },
   "devDependencies": {
     "@types/deep-extend": "^0.4.30",
-    "@types/jsdom": "^11.0.2",
-    "@types/lodash": "^4.14.76",
-    "@types/systemjs": "^0.20.5",
-    "assert-order": "^2.3.1",
+    "@types/jsdom": "^11.0.3",
+    "@types/lodash": "^4.14.80",
+    "@types/systemjs": "^0.20.6",
+    "assert-order": "^3.0.0",
     "aurelia-logging": "^1.3.1",
     "aurelia-logging-color": "^0.5.5",
-    "ava": "^0.22.0",
+    "ava": "^0.23.0",
     "ava-fixture": "^0.11.0",
     "dependency-check": "^2.9.1",
-    "eslint": "^4.8.0",
+    "eslint": "^4.10.0",
     "eslint-config-unional": "^0.2.3",
+    "global-store": "^0.7.1",
     "lower-case": "^1.1.4",
     "nyc": "^11.2.1",
     "rimraf": "^2.6.2",
-    "tslint": "^5.7.0",
+    "tslint": "^5.8.0",
     "tslint-config-unional": "^0.8.0",
-    "typescript": "^2.5.3"
+    "typescript": "~2.5"
   },
   "dependencies": {
     "deep-extend": "^0.5.0",
-    "domture": "^0.7.2",
+    "domture": "^0.8.0",
     "lodash": "^4.17.4"
   }
 }

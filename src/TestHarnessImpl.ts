@@ -1,25 +1,26 @@
-import { Domture, DOMWindow } from 'domture'
-import _ = require('lodash')
+import { Domture, DOMWindow, SystemJS } from 'domture'
 
-import { join } from 'path'
+// import { join } from 'path'
 
 import { TestHarnessConfig } from './interfaces'
+import { log } from './log'
+
 
 export class TestHarnessImpl {
   public window: DOMWindow
-  private relativeNamespaceLookup: Array<{ ns: string, path: string }> = []
+  public systemjs: SystemJS
+  private namespaceLookup: Array<{ ns: string, path: string }> = []
 
   constructor(private domture: Domture, private config: TestHarnessConfig) {
-    console.log(this.window !== undefined)
-    console.log(domture.window !== undefined)
-    _.defaults(this, domture)
-    console.log(this.window !== undefined)
-    this.window = domture.window
+    const { window, systemjs } = domture
+    this.window = window
+    this.systemjs = systemjs
+
     for (let ns in config.namespaces) {
-      const path = './' + join(config.srcRoot, config.namespaces[ns].path)
-      this.relativeNamespaceLookup.push({
+      const path = config.namespaces[ns].path
+      this.namespaceLookup.push({
         ns,
-        path: path
+        path
       })
     }
   }
@@ -32,8 +33,7 @@ export class TestHarnessImpl {
    * Relative path (from root): `./src/index.js`
    */
   async import(identifier: string) {
-    console.log(identifier, this.isRelative(identifier));
-
+    log.debug('importing', identifier)
     if (this.isRelative(identifier)) {
       return this.resolveRelative(identifier)
     }
@@ -42,8 +42,8 @@ export class TestHarnessImpl {
     if (matchedNamespace) {
       return this.resolveNamespace(identifier)
     }
-
     const result = await this.domture.import(identifier)
+
     return result
   }
 
@@ -63,13 +63,13 @@ export class TestHarnessImpl {
   }
 
   private isRelative(identifier: string) {
-    return identifier.indexOf(this.config.srcRoot) === 0
+    return identifier.startsWith('.')
   }
 
   private async resolveRelative(identifier: string) {
     const result = await this.domture.import(identifier)
-
-    const matchedNamespaces = this.relativeNamespaceLookup.filter(x => identifier.indexOf(x.path) === 0)
+    log.debug(result)
+    const matchedNamespaces = this.namespaceLookup.filter(x => identifier.indexOf(x.path) === 0)
     const matched = matchedNamespaces.reduce((v, c) => {
       return c.ns.length > v.ns.length ? c : v
     }, { ns: '', path: '' })
@@ -98,7 +98,7 @@ export class TestHarnessImpl {
 }
 
 function getNamespace(root: any, path: string) {
-  console.log(root, path);
+  // console.log(root, path);
 
   const nodes = path.split(/[.\/]/);
   let m = root[nodes[0]];
