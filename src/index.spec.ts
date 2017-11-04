@@ -8,10 +8,10 @@ const ftest = fixture(test, 'fixtures/my/product')
 ftest.each(async (t, d) => {
   // see './fixtures/my/product' folder for syntax supported.
   const harness = await createTestHarness({
-    srcRoot: './fixtures/my',
+    rootDir: '.',
     namespaces: {
       'My': {
-        path: '.'
+        path: './fixtures/my'
       }
     }
   })
@@ -22,7 +22,7 @@ ftest.each(async (t, d) => {
 
 test('import file by namespace path', async t => {
   const harness = await createTestHarness({
-    srcRoot: './fixtures/my',
+    rootDir: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
@@ -36,20 +36,20 @@ test('import file by namespace path', async t => {
 
 test('import file by relative path', async t => {
   const harness = await createTestHarness({
-    srcRoot: './fixtures/my',
+    rootDir: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
       }
     }
   })
-  let grid = await harness.import('./fixtures/my/product/Component.js')
+  let grid = await harness.import('./product/Component.js')
   t.deepEqual(grid, { a: 1 })
 })
 
 test('import modules', async t => {
   const harness = await createTestHarness({
-    srcRoot: './fixtures/my',
+    rootDir: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
@@ -69,10 +69,10 @@ test('import modules', async t => {
 
 test('getWindow()', async t => {
   const harness = await createTestHarness({
-    srcRoot: './fixtures/my',
+    rootDir: '.',
     namespaces: {
       'My': {
-        path: '.'
+        path: './fixtures/my'
       }
     }
   })
@@ -80,33 +80,25 @@ test('getWindow()', async t => {
   t.not(window.document, undefined)
 })
 
-test('can preload scripts', async t => {
+test('can preload `color-map` and `aurelia-logging-color` scripts', async t => {
+  // Failing due to `systemjs`. Need to debug in.
   const harness = await createTestHarness(
     {
-      srcRoot: './fixtures/my',
-      namespaces: {
-        'My': {
-          path: '.'
-        }
-      },
-      jsdomConfig: {
-        scripts: [
-          // Need to use `require.resolve` to find the abs path.
-          // Need to point to the bundled version as this is loaded in script tag.
-          // Need to manually load all dependencies as in script tag.
-          require.resolve('color-map/dist/color-map.es5.js'),
-          require.resolve('aurelia-logging-color/dist/aurelia-logging-color.es5.js')
-        ]
-      }
+      preloadScripts: [
+        // Need to use `require.resolve` to find the abs path.
+        // Need to point to the bundled version as this is loaded in script tag.
+        // Need to manually load all dependencies as in script tag.
+        require.resolve('color-map/dist/color-map.es5.js'),
+        require.resolve('aurelia-logging-color/dist/aurelia-logging-color.es5.js')
+      ]
     })
-  const window: any = harness.window
-  t.not(window.ColorMap, undefined)
-  t.not(window.AureliaLoggingColor, undefined)
+  t.not(harness.window.ColorMap, undefined)
+  t.not(harness.window.AureliaLoggingColor, undefined)
 })
 
 test('get(path)', async t => {
   const harness = await createTestHarness({
-    srcRoot: './fixtures/my',
+    rootDir: './fixtures/my',
     namespaces: {
       'My': {
         path: '.'
@@ -121,32 +113,16 @@ test('get(path)', async t => {
 test('access global namespace', async t => {
   const harness = await createTestHarness(
     {
-      srcRoot: './fixtures/my',
-      namespaces: {
-        'My': {
-          path: '.'
-        }
-      },
-      jsdomConfig: {
-        scripts: [
-          './node_modules/aurelia-logging-color/dist/aurelia-logging-color.es5.js'
-        ]
-      }
+      preloadScripts: [
+        './node_modules/global-store/dist/global-store.es5.js'
+      ]
     })
 
-  const Logging = harness.window.AureliaLoggingColor
-  t.truthy(Logging)
+  t.truthy(harness.window.GlobalStore)
 })
 
 test('color logs', async t => {
-  const harness = await createTestHarness({
-    srcRoot: './fixtures/my',
-    namespaces: {
-      'My': {
-        path: '.'
-      }
-    }
-  })
+  const harness = await createTestHarness()
   const Logging = await harness.import('aurelia-logging')
   const Color = await harness.import('aurelia-logging-color')
 
@@ -159,7 +135,7 @@ test('color logs', async t => {
 
 test('code is inside "src"', async t => {
   const harness = await createTestHarness({
-    srcRoot: './fixtures/fool',
+    rootDir: './fixtures/fool',
     namespaces: {
       'Fool': {
         main: '../fool.js',

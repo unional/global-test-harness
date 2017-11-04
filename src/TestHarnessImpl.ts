@@ -1,21 +1,26 @@
-import { Domture } from 'domture'
+import { Domture, DOMWindow, SystemJS } from 'domture'
 
-import { join } from 'path'
+// import { join } from 'path'
 
-import { TestHarnessConfig, TestHarness } from './interfaces'
+import { TestHarnessConfig } from './interfaces'
+import { log } from './log'
 
-export class TestHarnessImpl implements TestHarness {
-  public window: Window
-  private systemjs: typeof SystemJS
-  private relativeNamespaceLookup: Array<{ ns: string, path: string }> = []
-  constructor(domture: Domture, private config: TestHarnessConfig) {
-    this.systemjs = domture.window.SystemJS
-    this.window = domture.window
+
+export class TestHarnessImpl {
+  public window: DOMWindow
+  public systemjs: SystemJS
+  private namespaceLookup: Array<{ ns: string, path: string }> = []
+
+  constructor(private domture: Domture, private config: TestHarnessConfig) {
+    const { window, systemjs } = domture
+    this.window = window
+    this.systemjs = systemjs
+
     for (let ns in config.namespaces) {
-      const path = './' + join(config.srcRoot, config.namespaces[ns].path)
-      this.relativeNamespaceLookup.push({
+      const path = config.namespaces[ns].path
+      this.namespaceLookup.push({
         ns,
-        path: path
+        path
       })
     }
   }
@@ -28,6 +33,7 @@ export class TestHarnessImpl implements TestHarness {
    * Relative path (from root): `./src/index.js`
    */
   async import(identifier: string) {
+    log.debug('importing', identifier)
     if (this.isRelative(identifier)) {
       return this.resolveRelative(identifier)
     }
@@ -36,8 +42,8 @@ export class TestHarnessImpl implements TestHarness {
     if (matchedNamespace) {
       return this.resolveNamespace(identifier)
     }
+    const result = await this.domture.import(identifier)
 
-    const result = await this.systemjs.import(identifier)
     return result
   }
 
@@ -57,13 +63,13 @@ export class TestHarnessImpl implements TestHarness {
   }
 
   private isRelative(identifier: string) {
-    return identifier.indexOf(this.config.srcRoot) === 0
+    return identifier.startsWith('.')
   }
 
   private async resolveRelative(identifier: string) {
-    const result = await this.systemjs.import(identifier)
-
-    const matchedNamespaces = this.relativeNamespaceLookup.filter(x => identifier.indexOf(x.path) === 0)
+    const result = await this.domture.import(identifier)
+    log.debug(result)
+    const matchedNamespaces = this.namespaceLookup.filter(x => identifier.indexOf(x.path) === 0)
     const matched = matchedNamespaces.reduce((v, c) => {
       return c.ns.length > v.ns.length ? c : v
     }, { ns: '', path: '' })
@@ -85,13 +91,15 @@ export class TestHarnessImpl implements TestHarness {
 
   private async resolveNamespace(identifier: string) {
     const path = identifier.replace(/\./g, '/')
-    await this.systemjs.import(path)
+    await this.domture.import(path)
     return getNamespace(this.window, identifier)
   }
 
 }
 
 function getNamespace(root: any, path: string) {
+  // console.log(root, path);
+
   const nodes = path.split(/[.\/]/);
   let m = root[nodes[0]];
   for (let j = 1, len = nodes.length; j < len; j++) {
