@@ -80,7 +80,7 @@ test('getWindow()', async t => {
   t.not(window.document, undefined)
 })
 
-test.failing('can preload `color-map` and `aurelia-logging-color` scripts', async t => {
+test('can preload `color-map` and `aurelia-logging-color` scripts', async t => {
   // Failing due to `systemjs`. Need to debug in.
   const harness = await createTestHarness(
     {

@@ -27,6 +27,13 @@ const yourComponent = harness.get('YourCompany.yourProduct.yourComponent')
 Note that this library does not resolve your global namespace reference magically.
 You need to load your files in the right order to run the test.
 
+## Known issues
+
+Some global script files are loaded as CommonJS files.
+As a result the global variables are not propertly set.
+It is caused by <https://github.com/systemjs/systemjs/issues/1744>
+A workaround is to minify the file. That will help `systemjs` to detect it as a global script file.
+
 ## Contribute
 
 ```sh
