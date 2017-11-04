@@ -1,10 +1,6 @@
 import { Domture, DOMWindow, SystemJS } from 'domture'
-
-// import { join } from 'path'
-
 import { TestHarnessConfig } from './interfaces'
 import { log } from './log'
-
 
 export class TestHarnessImpl {
   public window: DOMWindow
@@ -42,9 +38,7 @@ export class TestHarnessImpl {
     if (matchedNamespace) {
       return this.resolveNamespace(identifier)
     }
-    const result = await this.domture.import(identifier)
-
-    return result
+    return await this.domture.import(identifier)
   }
 
   /**
@@ -52,13 +46,6 @@ export class TestHarnessImpl {
    * @param path Namespace path to the target, e.g. `MyCompany.myproduct.component`
    */
   get(path: string) {
-    // const namespace = this.getMatchedNamespace(path)
-    // if (namespace) {
-    //   path =
-    // }
-    // if (path.toLowerCase().indexOf(loweredNamespaceRoot) === 0) {
-    //   path = namespaceRoot + path.slice(namespaceRoot.length)
-    // }
     return getNamespace(this.window, path)
   }
 
@@ -67,17 +54,20 @@ export class TestHarnessImpl {
   }
 
   private async resolveRelative(identifier: string) {
-    const result = await this.domture.import(identifier)
-    log.debug(result)
-    const matchedNamespaces = this.namespaceLookup.filter(x => identifier.indexOf(x.path) === 0)
-    const matched = matchedNamespaces.reduce((v, c) => {
-      return c.ns.length > v.ns.length ? c : v
-    }, { ns: '', path: '' })
+    await this.domture.import(identifier)
 
+    const path = this.getNamespacePath(identifier)
+    return this.get(path)
+  }
+
+  private getNamespacePath(identifier) {
+    const matchedNamespaces = this.namespaceLookup.filter(x => identifier.indexOf(x.path) === 0).sort((a, b) => a.ns.length - b.ns.length)
+
+    const matched = matchedNamespaces.length === 0 ? { ns: '', path: '/' } : matchedNamespaces[0]
     const pathWithExtension = identifier.slice(matched.path.length + 1)
-    const indexOfFirstDot = pathWithExtension.indexOf('.');
-    const path = pathWithExtension.slice(0, indexOfFirstDot)
-    return getNamespace(result, path)
+    const lastIndexOfDot = pathWithExtension.lastIndexOf('.');
+    const path = lastIndexOfDot !== -1 ? pathWithExtension.slice(0, lastIndexOfDot) : pathWithExtension
+    return matched.ns ? [matched.ns, path].join('/') : path
   }
 
   private getMatchedNamespace(identifier: string) {
@@ -98,9 +88,8 @@ export class TestHarnessImpl {
 }
 
 function getNamespace(root: any, path: string) {
-  // console.log(root, path);
-
   const nodes = path.split(/[.\/]/);
+
   let m = root[nodes[0]];
   for (let j = 1, len = nodes.length; j < len; j++) {
     if (!m) {

@@ -49,6 +49,7 @@
     "source": [
       "scripts/*.js",
       "dist-es5/**/*.js",
+      "fixtures/**/*",
       "*.json"
     ],
     "require": [
@@ -69,7 +70,7 @@
     "@types/lodash.merge": "^4.6.3",
     "@types/systemjs": "^0.20.6",
     "assert-order": "^3.0.0",
-    "aurelia-logging-color": "^0.5.7",
+    "aurelia-logging-color": "^0.5.9",
     "ava": "^0.23.0",
     "ava-fixture": "^0.11.0",
     "color-map": "^0.5.11",

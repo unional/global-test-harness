@@ -16,8 +16,16 @@ ftest.each(async (t, d) => {
     }
   })
   const filename = d.caseName.slice(0, d.caseName.length - 3)
-  let grid = await harness.import(`./fixtures/my/product/${filename}.js`)
-  t.deepEqual(grid, { a: 1 })
+  let actual = await harness.import(`./fixtures/my/product/${filename}.js`)
+  t.deepEqual(actual, { a: 1 })
+})
+
+test('top level', async t => {
+  const harness = await createTestHarness({
+    rootDir: './fixtures/top'
+  })
+  let actual = await harness.import('./foo')
+  t.deepEqual(actual, { a: 1 })
 })
 
 test('import file by namespace path', async t => {
@@ -30,8 +38,8 @@ test('import file by namespace path', async t => {
     }
   })
 
-  let grid = await harness.import('My.product.Component')
-  t.deepEqual(grid, { a: 1 })
+  let actual = await harness.import('My.product.Component')
+  t.deepEqual(actual, { a: 1 })
 })
 
 test('import file by relative path', async t => {
@@ -43,8 +51,8 @@ test('import file by relative path', async t => {
       }
     }
   })
-  let grid = await harness.import('./product/Component.js')
-  t.deepEqual(grid, { a: 1 })
+  let actual = await harness.import('./product/Component.js')
+  t.deepEqual(actual, { a: 1 })
 })
 
 test('import modules', async t => {

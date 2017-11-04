@@ -9,14 +9,15 @@ export async function createTestHarness(givenConfig: Partial<TestHarnessConfig> 
   const config = unpartial({ rootDir: '.', namespaces: {} }, givenConfig)
   const map = getPathConfig(config.rootDir, config.namespaces)
   const packages = getPackageConfig(config.namespaces)
-  const domture = await createDomture(unpartialRecursively<Partial<DomtureConfig>>({
+  const domtureConfig = unpartialRecursively<Partial<DomtureConfig>>({
     packageManager: 'npm',
     systemjsConfig: {
       map,
       packages
     }
-  }, config))
+  }, config)
 
+  const domture = await createDomture(domtureConfig)
   return (new TestHarnessImpl(domture, config) as any) as TestHarness
 }
 
