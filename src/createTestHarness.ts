@@ -1,7 +1,6 @@
-import extend = require('deep-extend')
-import { createDomture } from 'domture'
+import { createDomture, DomtureConfig } from 'domture'
 import { join } from 'path'
-import { unpartial } from 'unpartial'
+import { unpartial, unpartialRecursively } from 'unpartial'
 
 import { TestHarnessConfig, TestHarness, Namespaces } from './interfaces'
 import { TestHarnessImpl } from './TestHarnessImpl'
@@ -10,7 +9,7 @@ export async function createTestHarness(givenConfig: Partial<TestHarnessConfig> 
   const config = unpartial({ rootDir: '.', namespaces: {} }, givenConfig)
   const map = getPathConfig(config.rootDir, config.namespaces)
   const packages = getPackageConfig(config.namespaces)
-  const domture = await createDomture(extend({
+  const domture = await createDomture(unpartialRecursively<Partial<DomtureConfig>>({
     packageManager: 'npm',
     systemjsConfig: {
       map,
