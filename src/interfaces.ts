@@ -26,6 +26,6 @@ export interface Namespaces {
   }
 }
 
-export interface TestHarnessConfig extends Pick<DomtureConfig, 'rootDir'>, Partial<Pick<DomtureConfig, 'packageManager' | 'preloadScripts' | 'systemjsConfig' | 'transpiler' | 'jsdomConstructorOptions'>> {
+export interface TestHarnessConfig extends Pick<DomtureConfig, 'rootDir'>, Partial<Pick<DomtureConfig, 'packageManager' | 'preloadScripts' | 'systemjsConfig' | 'transpiler' | 'jsdomConstructorOptions' | 'explicitExtension'>> {
   namespaces: Namespaces
 }
