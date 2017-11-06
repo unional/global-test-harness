@@ -161,3 +161,8 @@ test('code is inside "src"', async t => {
   const colorMap = await harness.import('color-map')
   t.truthy(colorMap)
 })
+
+test('undefined namespace returns undefined', async t => {
+  const harness = await createTestHarness()
+  t.is(harness.get('a.b.c.d.e'), undefined)
+})

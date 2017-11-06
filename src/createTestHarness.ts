@@ -29,11 +29,7 @@ function getPathConfig(root: string, namespaces: Namespaces) {
   }, {})
 }
 
-function getPackageConfig(namespaces?: Namespaces) {
-  if (!namespaces) {
-    return undefined
-  }
-
+function getPackageConfig(namespaces: Namespaces) {
   const keys = Object.keys(namespaces)
   return keys.reduce((v, key) => {
     v[key] = {
