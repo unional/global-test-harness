@@ -1,4 +1,4 @@
-import { getLogger, Logger } from 'aurelia-logging'
+import { getLogger, Logger } from '@unional/logging'
 
 const log: Logger = getLogger('global-test-harness')
 
