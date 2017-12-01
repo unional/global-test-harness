@@ -87,7 +87,7 @@
   },
   "dependencies": {
     "@unional/logging": "^0.2.3",
-    "domture": "^0.8.9",
+    "domture": "^0.9.0",
     "unpartial": "^0.4.1"
   }
 }
