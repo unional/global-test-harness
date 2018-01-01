@@ -83,7 +83,7 @@
     "semantic-release": "^11.0.2",
     "tslint": "^5.8.0",
     "tslint-config-unional": "^0.8.0",
-    "typescript": "~2.5"
+    "typescript": "~2.6.2"
   },
   "dependencies": {
     "@unional/logging": "^0.2.5",
