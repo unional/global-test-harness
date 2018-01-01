@@ -40,6 +40,9 @@
     "type": "git",
     "url": "https://github.com/unional/global-test-harness.git"
   },
+  "release": {
+    "verifyConditions": "condition-circle"
+  },
   "license": "MIT",
   "ava": {
     "files": [
