@@ -33,17 +33,11 @@ function mixin(domture: Domture, config: TestHarnessConfig) {
       return isEmptyObject(result) ? this.get(namespacePath) : result
     }
     else {
-      let relative = toRelative(identifier)
-      if (relative) {
-        const result = await origImport.call(domture, relative)
-        if (isEmptyObject(result))
-          return this.get(identifier)
-        else
-          return result
-      }
-      else {
-        return origImport.call(domture, identifier)
-      }
+      const result = await origImport.call(domture, toRelative(identifier))
+      if (isEmptyObject(result))
+        return this.get(identifier)
+      else
+        return result
     }
   }
 }
