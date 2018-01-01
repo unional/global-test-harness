@@ -32,8 +32,8 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run:
-        name: update lockfile
-        command: ./node_modules/.bin/greenkeeper-lockfile-update
+          name: update lockfile
+          command: ./node_modules/.bin/greenkeeper-lockfile-update
 
       # run tests!
       - run: npm run verify
