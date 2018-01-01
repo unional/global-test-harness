@@ -27,9 +27,7 @@ test('load typescript with deep relative path', async t => {
     transpiler: 'typescript',
     rootDir: '.',
     namespaces: {
-      '': {
-        path: './fixtures/ts'
-      }
+      '': './fixtures/ts'
     }
   })
 
@@ -42,9 +40,7 @@ test('load typescript with deep relative path with extension', async t => {
     transpiler: 'typescript',
     rootDir: '.',
     namespaces: {
-      '': {
-        path: './fixtures/ts'
-      }
+      '': './fixtures/ts'
     }
   })
 
@@ -56,11 +52,8 @@ test('load typescript and javascript with deep relative path with extension', as
   const harness = await createTestHarness({
     transpiler: 'typescript',
     rootDir: '.',
-    explicitExtension: true,
     namespaces: {
-      '': {
-        path: './fixtures/ts'
-      }
+      '': './fixtures/ts'
     }
   })
 
