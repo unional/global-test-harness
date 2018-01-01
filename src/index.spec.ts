@@ -10,9 +10,7 @@ ftest.each(async (t, d) => {
   const harness = await createTestHarness({
     rootDir: '.',
     namespaces: {
-      'My': {
-        path: './fixtures/my'
-      }
+      'My': './fixtures/my'
     }
   })
   const filename = d.caseName.slice(0, d.caseName.length - 3)
@@ -20,7 +18,7 @@ ftest.each(async (t, d) => {
   t.deepEqual(actual, { a: 1 })
 })
 
-test('top level', async t => {
+test('import top level file using relative path', async t => {
   const harness = await createTestHarness({
     rootDir: './fixtures/top'
   })
@@ -28,13 +26,22 @@ test('top level', async t => {
   t.deepEqual(actual, { a: 1 })
 })
 
+test('import file by relative path', async t => {
+  const harness = await createTestHarness({
+    rootDir: './fixtures/my',
+    namespaces: {
+      'My': '.'
+    }
+  })
+  let actual = await harness.import('./product/Component.js')
+  t.deepEqual(actual, { a: 1 })
+})
+
 test('import file by namespace path', async t => {
   const harness = await createTestHarness({
     rootDir: './fixtures/my',
     namespaces: {
-      'My': {
-        path: '.'
-      }
+      'My': '.'
     }
   })
 
@@ -42,26 +49,11 @@ test('import file by namespace path', async t => {
   t.deepEqual(actual, { a: 1 })
 })
 
-test('import file by relative path', async t => {
-  const harness = await createTestHarness({
-    rootDir: './fixtures/my',
-    namespaces: {
-      'My': {
-        path: '.'
-      }
-    }
-  })
-  let actual = await harness.import('./product/Component.js')
-  t.deepEqual(actual, { a: 1 })
-})
-
 test('import modules', async t => {
   const harness = await createTestHarness({
     rootDir: './fixtures/my',
     namespaces: {
-      'My': {
-        path: '.'
-      }
+      'My': '.'
     }
   })
 
@@ -79,9 +71,7 @@ test('getWindow()', async t => {
   const harness = await createTestHarness({
     rootDir: '.',
     namespaces: {
-      'My': {
-        path: './fixtures/my'
-      }
+      'My': './fixtures/my'
     }
   })
   const window = harness.window
@@ -108,9 +98,7 @@ test('get(path)', async t => {
   const harness = await createTestHarness({
     rootDir: './fixtures/my',
     namespaces: {
-      'My': {
-        path: '.'
-      }
+      'My': '.'
     }
   })
   let grid = await harness.import('My.product.Component')
@@ -145,10 +133,7 @@ test('code is inside "src"', async t => {
   const harness = await createTestHarness({
     rootDir: './fixtures/fool',
     namespaces: {
-      'Fool': {
-        main: '../fool.js',
-        path: 'src/fool'
-      }
+      'Fool': './src/fool'
     }
   })
 

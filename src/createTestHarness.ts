@@ -1,44 +1,53 @@
-import { createDomture, DomtureConfig } from 'domture'
-import { join } from 'path'
-import { unpartial, unpartialRecursively } from 'unpartial'
+import { createDomture, Domture } from 'domture'
+import { unpartial } from 'unpartial'
 
-import { TestHarnessConfig, TestHarness, Namespaces } from './interfaces'
-import { TestHarnessImpl } from './TestHarnessImpl'
+import { defaultConfig } from './constants'
+import {
+  generateNamespaceToRelativeFunction,
+  generateRelativeToNamespaceFunction
+} from './generates'
+import { TestHarnessConfig, TestHarness } from './interfaces'
+import { isRelative } from './isRelative'
+import { log } from './log'
 
 export async function createTestHarness(givenConfig: Partial<TestHarnessConfig> = {}): Promise<TestHarness> {
-  const config = unpartial({ rootDir: '.', namespaces: {} }, givenConfig)
-  const map = getPathConfig(config.rootDir, config.namespaces)
-  const packages = getPackageConfig(config.namespaces)
-  const domtureConfig = unpartialRecursively<Partial<DomtureConfig>>({
-    packageManager: 'npm',
-    systemjsConfig: {
-      map,
-      packages
-    }
-  }, config)
+  const config = unpartial(defaultConfig, givenConfig)
+  const domture = await createDomture(config)
 
-  const domture = await createDomture(domtureConfig)
-  return (new TestHarnessImpl(domture, config) as any) as TestHarness
+  mixin(domture, config)
+  return domture as TestHarness
 }
 
-function getPathConfig(root: string, namespaces: Namespaces) {
-  const keys = Object.keys(namespaces)
-  return keys.reduce<{ [index: string]: string }>((v, key) => {
-    v[key] = './' + join(root, namespaces[key].path)
-    return v
-  }, {})
+function mixin(domture: Domture, config: TestHarnessConfig) {
+  const harness = domture as TestHarness
+
+  const toRelative = generateNamespaceToRelativeFunction(config.rootDir, config.namespaces)
+  const toNamespace = generateRelativeToNamespaceFunction(config.rootDir, config.namespaces)
+
+  const origImport = domture.import
+  harness.import = async function (this: TestHarness, identifier: string) {
+    log.debug('import', identifier)
+    if (isRelative(identifier)) {
+      const namespacePath = toNamespace(identifier)
+      const result = await origImport.call(domture, identifier)
+      return isEmptyObject(result) ? this.get(namespacePath) : result
+    }
+    else {
+      let relative = toRelative(identifier)
+      if (relative) {
+        const result = await origImport.call(domture, relative)
+        if (isEmptyObject(result))
+          return this.get(identifier)
+        else
+          return result
+      }
+      else {
+        return origImport.call(domture, identifier)
+      }
+    }
+  }
 }
 
-function getPackageConfig(namespaces: Namespaces) {
-  const keys = Object.keys(namespaces)
-  return keys.reduce((v, key) => {
-    v[key] = {
-      defaultExtension: 'js'
-    }
-    const ns = namespaces[key];
-    if (ns.main) {
-      v[key].main = ns.main
-    }
-    return v
-  }, {})
+function isEmptyObject(subject) {
+  return typeof subject === 'object' && Object.keys(subject).length === 0
 }
