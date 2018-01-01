@@ -20,14 +20,13 @@
     "lint": "tslint -p tsconfig.json 'src/**/*.ts'",
     "install": "cd fixtures/fool && npm i",
     "prepublishOnly": "npm run build",
-    "version": "npm run remove-spec",
     "verify": "npm run lint && npm run coverage && npm run dependency-check",
     "coverage": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "remove-spec": "rimraf dist-es5/**/*.spec.*",
     "test": "npm run clean && tsc && ava",
     "watch": "npm run clean && node scripts/watch.js",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release"
   },
   "author": {
     "name": "Homa Wong",
