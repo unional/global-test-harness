@@ -1,12 +1,13 @@
 # global-test-harness
 
-[![stable][stable-image]][stable-url]
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][downloads-image]][downloads-url]
 [![Build status][travis-image]][travis-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
+
 [![Semantic Release][semantic-release-image]][semantic-release-url]
 [![Greenkeeper badge][greenkeeper-image]][greenkeeper-url]
+
 [![Wallaby.js][wallaby-image]][wallaby-url]
 
 Starts a `jsdom` instance and load global namespace code similar to module code for testing.
