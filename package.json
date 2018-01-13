@@ -75,7 +75,7 @@
     "color-map": "^1.0.0",
     "dependency-check": "^2.9.2",
     "eslint": "^4.14.0",
-    "eslint-config-unional": "^0.2.3",
+    "eslint-config-unional": "^0.3.0",
     "global-store": "^0.7.2",
     "lower-case": "^1.1.4",
     "nyc": "^11.4.1",
