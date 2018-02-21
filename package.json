@@ -86,7 +86,7 @@
     "typescript": "^2.6.2"
   },
   "dependencies": {
-    "@unional/logging": "^0.2.5",
+    "@unional/logging": "^0.3.0",
     "domture": "^1.1.1",
     "unpartial": "^0.4.1"
   }
