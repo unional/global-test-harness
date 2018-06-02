@@ -78,7 +78,7 @@
     "eslint-config-unional": "^0.3.0",
     "global-store": "^0.7.2",
     "lower-case": "^1.1.4",
-    "nyc": "^11.4.1",
+    "nyc": "^12.0.1",
     "rimraf": "^2.6.2",
     "semantic-release": "^15.0.3",
     "tslint": "^5.8.0",
