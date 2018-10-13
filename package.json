@@ -82,7 +82,7 @@
     "rimraf": "^2.6.2",
     "semantic-release": "^15.0.3",
     "tslint": "^5.8.0",
-    "tslint-config-unional": "^0.9.1",
+    "tslint-config-unional": "^0.10.0",
     "typescript": "^2.6.2"
   },
   "dependencies": {
