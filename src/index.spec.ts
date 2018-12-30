@@ -87,7 +87,7 @@ test('can preload `color-map` and `aurelia-logging-color` scripts', async t => {
         // Need to point to the bundled version as this is loaded in script tag.
         // Need to manually load all dependencies as in script tag.
         require.resolve('color-map/dist/color-map.es5.js'),
-        require.resolve('aurelia-logging-color/dist/aurelia-logging-color.es5.js')
+        require.resolve('aurelia-logging-color/dist/aurelia-logging-color.js')
       ]
     })
   t.not(harness.window.ColorMap, undefined)
