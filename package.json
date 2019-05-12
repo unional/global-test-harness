@@ -88,6 +88,6 @@
   "dependencies": {
     "@unional/logging": "^1.0.1",
     "domture": "^1.4.0",
-    "unpartial": "^0.5.0"
+    "unpartial": "^0.6.0"
   }
 }
