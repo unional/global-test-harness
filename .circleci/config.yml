@@ -16,9 +16,9 @@ workflows:
       - node6:
           requires:
             - node-latest
-      - size-limit:
-          requires:
-            - node-latest
+      # - size-limit:
+      #     requires:
+      #       - node-latest
       - release:
           filters:
             branches:
