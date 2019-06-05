@@ -42,32 +42,33 @@
     "watch": "npm run clean && node scripts/watch.js"
   },
   "dependencies": {
-    "@unional/logging": "^1.0.1",
-    "domture": "^1.4.0",
-    "unpartial": "^0.5.0"
+    "@unional/logging": "^1.0.5",
+    "domture": "^1.4.1",
+    "unpartial": "^0.6.3"
   },
   "devDependencies": {
     "@types/deep-extend": "^0.4.31",
-    "@types/jsdom": "^12.2.1",
-    "@types/lodash": "^4.14.119",
-    "@types/lodash.merge": "^4.6.4",
+    "@types/jsdom": "^12.2.3",
+    "@types/lodash": "^4.14.133",
+    "@types/lodash.merge": "^4.6.6",
+    "@types/node": "^12.0.4",
     "@types/systemjs": "^0.20.6",
+    "@unional/fixture": "^1.7.2",
     "assert-order": "^3.1.1",
-    "aurelia-logging-color": "^1.0.0",
-    "ava": "^0.25.0",
-    "ava-fixture": "^0.11.0",
+    "aurelia-logging-color": "^1.0.5",
+    "ava": "^2.0.0",
     "color-map": "^1.1.0",
     "dependency-check": "^3.3.0",
-    "eslint": "^5.11.1",
+    "eslint": "^5.16.0",
     "eslint-plugin-harmony": "^1.0.4",
     "global-store": "^0.8.2",
     "lower-case": "^1.1.4",
-    "nyc": "^13.1.0",
-    "rimraf": "^2.6.2",
-    "semantic-release": "^15.13.2",
-    "tslint": "^5.12.0",
+    "nyc": "^14.1.1",
+    "rimraf": "^2.6.3",
+    "semantic-release": "^15.13.14",
+    "tslint": "^5.17.0",
     "tslint-config-unional": "^0.10.0",
-    "typescript": "^3.2.2"
+    "typescript": "^3.5.1"
   },
   "ava": {
     "files": [

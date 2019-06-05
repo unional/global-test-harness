@@ -1,9 +1,5 @@
-import { test } from 'ava'
-
-import {
-  generateNamespaceToRelativeFunction,
-  generateRelativeToNamespaceFunction
-} from './generates'
+import test from 'ava';
+import { generateNamespaceToRelativeFunction, generateRelativeToNamespaceFunction } from './generates';
 
 test('gets base namespace', t => {
   const ns = {

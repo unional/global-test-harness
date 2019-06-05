@@ -1,21 +1,20 @@
-import test from 'ava'
-import fixture from 'ava-fixture'
+import test from 'ava';
+import fs from 'fs';
+import { createTestHarness } from './index';
 
-import { createTestHarness } from './index'
-
-const ftest = fixture(test, 'fixtures/my/product')
-
-ftest.each(async (t, d) => {
-  // see './fixtures/my/product' folder for syntax supported.
-  const harness = await createTestHarness({
-    rootDir: '.',
-    namespaces: {
-      'My': './fixtures/my'
-    }
+fs.readdirSync('fixtures/my/product').forEach(caseName => {
+  test(`import global namespace by relative path: ${caseName}`, async t => {
+    // see './fixtures/my/product' folder for syntax supported.
+    const harness = await createTestHarness({
+      rootDir: '.',
+      namespaces: {
+        'My': './fixtures/my'
+      }
+    })
+    const filename = caseName.slice(0, caseName.length - 3)
+    let actual = await harness.import(`./fixtures/my/product/${filename}.js`)
+    t.deepEqual(actual, { a: 1 })
   })
-  const filename = d.caseName.slice(0, d.caseName.length - 3)
-  let actual = await harness.import(`./fixtures/my/product/${filename}.js`)
-  t.deepEqual(actual, { a: 1 })
 })
 
 test('import top level file using relative path', async t => {

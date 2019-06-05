@@ -1,14 +1,10 @@
-import { createDomture, Domture } from 'domture'
-import { unpartial } from 'unpartial'
-
-import { defaultConfig } from './constants'
-import {
-  generateNamespaceToRelativeFunction,
-  generateRelativeToNamespaceFunction
-} from './generates'
-import { TestHarnessConfig, TestHarness } from './interfaces'
-import { isRelative } from './isRelative'
-import { log } from './log'
+import { createDomture, Domture } from 'domture';
+import { unpartial } from 'unpartial';
+import { defaultConfig } from './constants';
+import { generateNamespaceToRelativeFunction, generateRelativeToNamespaceFunction } from './generates';
+import { TestHarness, TestHarnessConfig } from './interfaces';
+import { isRelative } from './isRelative';
+import { log } from './log';
 
 export async function createTestHarness(givenConfig: Partial<TestHarnessConfig> = {}): Promise<TestHarness> {
   const config = unpartial(defaultConfig, givenConfig)

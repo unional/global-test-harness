@@ -1,6 +1,5 @@
-import test from 'ava'
-
-import { createTestHarness } from './index'
+import test from 'ava';
+import { createTestHarness } from './index';
 
 test('load typescript with shadow relative path', async t => {
   const harness = await createTestHarness({
