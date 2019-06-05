@@ -53,7 +53,6 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/node": "^12.0.4",
     "@types/systemjs": "^0.20.6",
-    "@unional/fixture": "^1.7.2",
     "assert-order": "^3.1.1",
     "aurelia-logging-color": "^1.0.5",
     "ava": "^2.0.0",
