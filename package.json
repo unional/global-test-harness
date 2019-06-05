@@ -36,8 +36,8 @@
     "prepublishOnly": "npm run build",
     "remove-spec": "rimraf dist-es5/**/*.spec.*",
     "semantic-release": "semantic-release",
-    "test": "npm run clean && tsc && jest",
-    "verify": "npm run lint && npm run coverage && npm run dependency-check",
+    "test": "jest --reporters=default",
+    "verify": "npm run lint && npm run build && npm run dependency-check && jest --coverage --reporters=default",
     "watch": "jest --watch"
   },
   "dependencies": {
