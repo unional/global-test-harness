@@ -1,27 +1,26 @@
-import test from 'ava';
-import { createTestHarness } from './index';
+import { createTestHarness } from '.';
 
-test('load typescript with shadow relative path', async t => {
+test('load typescript with shadow relative path', async () => {
   const harness = await createTestHarness({
     transpiler: 'typescript',
     rootDir: './fixtures/ts'
   })
 
   const foo = await harness.import('./foo')
-  t.deepEqual(foo, { a: 'foo' })
+  expect(foo).toEqual({ a: 'foo' })
 })
 
-test('load typescript with shadow relative path with extension', async t => {
+test('load typescript with shadow relative path with extension', async () => {
   const harness = await createTestHarness({
     transpiler: 'typescript',
     rootDir: './fixtures/ts'
   })
 
   const foo = await harness.import('./foo.ts')
-  t.deepEqual(foo, { a: 'foo' })
+  expect(foo).toEqual({ a: 'foo' })
 })
 
-test('load typescript with deep relative path', async t => {
+test('load typescript with deep relative path', async () => {
   const harness = await createTestHarness({
     transpiler: 'typescript',
     rootDir: '.',
@@ -31,10 +30,10 @@ test('load typescript with deep relative path', async t => {
   })
 
   const foo = await harness.import('./fixtures/ts/foo')
-  t.deepEqual(foo, { a: 'foo' })
+  expect(foo).toEqual({ a: 'foo' })
 })
 
-test('load typescript with deep relative path with extension', async t => {
+test('load typescript with deep relative path with extension', async () => {
   const harness = await createTestHarness({
     transpiler: 'typescript',
     rootDir: '.',
@@ -44,10 +43,10 @@ test('load typescript with deep relative path with extension', async t => {
   })
 
   const foo = await harness.import('./fixtures/ts/foo.ts')
-  t.deepEqual(foo, { a: 'foo' })
+  expect(foo).toEqual({ a: 'foo' })
 })
 
-test('load typescript and javascript with deep relative path with extension', async t => {
+test('load typescript and javascript with deep relative path with extension', async () => {
   const harness = await createTestHarness({
     transpiler: 'typescript',
     rootDir: '.',
@@ -57,8 +56,8 @@ test('load typescript and javascript with deep relative path with extension', as
   })
 
   const foo = await harness.import('./fixtures/ts/foo.ts')
-  t.deepEqual(foo, { a: 'foo' })
+  expect(foo).toEqual({ a: 'foo' })
 
   const boo = await harness.import('./fixtures/ts/boo.js')
-  t.deepEqual(boo, { a: 'boo' })
+  expect(boo).toEqual({ a: 'boo' })
 })

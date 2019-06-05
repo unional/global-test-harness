@@ -1,9 +1,8 @@
-import test from 'ava';
 import fs from 'fs';
-import { createTestHarness } from './index';
+import { createTestHarness } from '.';
 
 fs.readdirSync('fixtures/my/product').forEach(caseName => {
-  test(`import global namespace by relative path: ${caseName}`, async t => {
+  test(`import global namespace by relative path: ${caseName}`, async () => {
     // see './fixtures/my/product' folder for syntax supported.
     const harness = await createTestHarness({
       rootDir: '.',
@@ -13,19 +12,19 @@ fs.readdirSync('fixtures/my/product').forEach(caseName => {
     })
     const filename = caseName.slice(0, caseName.length - 3)
     let actual = await harness.import(`./fixtures/my/product/${filename}.js`)
-    t.deepEqual(actual, { a: 1 })
+    expect(actual).toEqual({ a: 1 })
   })
 })
 
-test('import top level file using relative path', async t => {
+test('import top level file using relative path', async () => {
   const harness = await createTestHarness({
     rootDir: './fixtures/top'
   })
   let actual = await harness.import('./foo')
-  t.deepEqual(actual, { a: 1 })
+  expect(actual).toEqual({ a: 1 })
 })
 
-test('import file by relative path', async t => {
+test('import file by relative path', async () => {
   const harness = await createTestHarness({
     rootDir: './fixtures/my',
     namespaces: {
@@ -33,10 +32,10 @@ test('import file by relative path', async t => {
     }
   })
   let actual = await harness.import('./product/Component.js')
-  t.deepEqual(actual, { a: 1 })
+  expect(actual).toEqual({ a: 1 })
 })
 
-test('import file by namespace path', async t => {
+test('import file by namespace path', async () => {
   const harness = await createTestHarness({
     rootDir: './fixtures/my',
     namespaces: {
@@ -45,10 +44,10 @@ test('import file by namespace path', async t => {
   })
 
   let actual = await harness.import('My.product.Component')
-  t.deepEqual(actual, { a: 1 })
+  expect(actual).toEqual({ a: 1 })
 })
 
-test('import modules', async t => {
+test('import modules', async () => {
   const harness = await createTestHarness({
     rootDir: './fixtures/my',
     namespaces: {
@@ -59,14 +58,15 @@ test('import modules', async t => {
   // `aurelia-logging-color` depends on `color-map`
   // The harness will load that automatically
   const Color = await harness.import('aurelia-logging-color')
-  t.not(Color.ColorAppender, undefined)
+  expect(Color.ColorAppender).not.toBeUndefined()
 
   // Can also import CommonJS modules
   const lowercase = await harness.import('lower-case')
-  t.is(lowercase('Mister'), 'mister')
+
+  expect(lowercase('Mister')).toBe('mister')
 })
 
-test('getWindow()', async t => {
+test('getWindow()', async () => {
   const harness = await createTestHarness({
     rootDir: '.',
     namespaces: {
@@ -74,10 +74,10 @@ test('getWindow()', async t => {
     }
   })
   const window = harness.window
-  t.not(window.document, undefined)
+  expect(window.document).not.toBeUndefined()
 })
 
-test('can preload `color-map` and `aurelia-logging-color` scripts', async t => {
+test('can preload `color-map` and `aurelia-logging-color` scripts', async () => {
   // Failing due to `systemjs`. Need to debug in.
   const harness = await createTestHarness(
     {
@@ -89,11 +89,11 @@ test('can preload `color-map` and `aurelia-logging-color` scripts', async t => {
         require.resolve('aurelia-logging-color/dist/aurelia-logging-color.js')
       ]
     })
-  t.not(harness.window.ColorMap, undefined)
-  t.not(harness.window.AureliaLoggingColor, undefined)
+  expect(harness.window.ColorMap).not.toBeUndefined()
+  expect(harness.window.AureliaLoggingColor).not.toBeUndefined()
 })
 
-test('get(path)', async t => {
+test('get(path)', async () => {
   const harness = await createTestHarness({
     rootDir: './fixtures/my',
     namespaces: {
@@ -102,10 +102,10 @@ test('get(path)', async t => {
   })
   let grid = await harness.import('My.product.Component')
 
-  t.deepEqual(harness.get('My.product.Component'), grid)
+  expect(harness.get('My.product.Component')).toEqual(grid)
 })
 
-test('access global namespace', async t => {
+test('access global namespace', async () => {
   const harness = await createTestHarness(
     {
       preloadScripts: [
@@ -113,10 +113,10 @@ test('access global namespace', async t => {
       ]
     })
 
-  t.truthy(harness.window.GlobalStore)
+  expect(harness.window.GlobalStore).toBeTruthy()
 })
 
-test('color logs', async t => {
+test('color logs', async () => {
   const harness = await createTestHarness()
   const Logging = await harness.import('aurelia-logging')
   const Color = await harness.import('aurelia-logging-color')
@@ -125,10 +125,10 @@ test('color logs', async t => {
   Logging.setLevel(Logging.logLevel.debug)
   const log = Logging.getLogger('color log')
   log.debug('do some color')
-  t.pass('check console output')
+  console.info('check console output')
 })
 
-test('code is inside "src"', async t => {
+test('code is inside "src"', async () => {
   const harness = await createTestHarness({
     rootDir: './fixtures/fool',
     namespaces: {
@@ -137,16 +137,16 @@ test('code is inside "src"', async t => {
   })
 
   const Fool = await harness.import('Fool')
-  t.is(Fool.a, 2)
+  expect(Fool.a).toBe(2)
 
   const boo = await harness.import('Fool.boo')
-  t.is(boo.a, 1)
+  expect(boo.a).toBe(1)
 
   const colorMap = await harness.import('color-map')
-  t.truthy(colorMap)
+  expect(colorMap).toBeTruthy()
 })
 
-test('undefined namespace returns undefined', async t => {
+test('undefined namespace returns undefined', async () => {
   const harness = await createTestHarness()
-  t.is(harness.get('a.b.c.d.e'), undefined)
+  expect(harness.get('a.b.c.d.e')).toBeUndefined()
 })
